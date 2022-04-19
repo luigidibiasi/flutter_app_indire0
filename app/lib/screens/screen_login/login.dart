@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../models/utente.dart';
+import '../../repository/data_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+DataRepository repository = DataRepository();
+//final newUser = Utente('admin', nome:'Maria', cognome: 'Natale', email: 'maria_girl.98@hotmail.it', password:'maria',
+  //telefono: '333544', admin: true, listaAttivita: []);
 
 class Login extends StatefulWidget{
   const Login({Key? key}) : super(key: key);
@@ -10,6 +17,7 @@ class Login extends StatefulWidget{
 class _LoginState extends State<Login>{
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +59,17 @@ class _LoginState extends State<Login>{
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () async {
                     print(usernameController.text);
-                    Navigator.pushNamed(context, '/menu_admin');
-                    //DatabaseManagement.checkCredentials(usernameController.text, passwordController.text);
+                    print(passwordController.text);
+                    var result = repository.checkCredentials(usernameController.text, passwordController.text);
+                    Utente? utente = await result;
+                    if (utente!= null){
+                      Navigator.pushNamed(context, '/menu_admin');
+                    }
+                    else{
+                      _showErrorDialog();
+                    }
                   },
                   child: Text("Login"),
                 ),
@@ -75,6 +90,22 @@ class _LoginState extends State<Login>{
             ],
           )),
     );
+  }
+
+  void _showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => new AlertDialog(
+          title: new Text('Warning'),
+          content: new Text('Username e/o password errati'),
+          actions: <Widget>[
+            new IconButton(
+                icon: new Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ));
   }
 }
 

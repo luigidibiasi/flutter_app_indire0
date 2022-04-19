@@ -16,11 +16,17 @@ class CustomTheme {
         ),
         textTheme: TextTheme(
           headline1: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold),
-          headline6: TextStyle(fontSize: 32.0, fontStyle: FontStyle.italic),
+          headline2: TextStyle(fontSize: 24.0, fontStyle: FontStyle.italic),
+            headline4: TextStyle(fontSize: 20.0, fontStyle: FontStyle.normal, color: Colors.black),
           bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind')
         ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.lightBlueAccent,
+        titleTextStyle: TextStyle(color: Colors.white,
+            fontFamily: 'Open sans',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+        )
       )
     );
   }

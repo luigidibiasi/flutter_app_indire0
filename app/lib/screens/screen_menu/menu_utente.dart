@@ -6,7 +6,7 @@ class MenuUtente extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Menu")),
+        appBar: AppBar(title: Text("Home")),
         body: Padding(
             padding: const EdgeInsets.all(50),
             child: ListView(
@@ -30,7 +30,8 @@ class MenuUtente extends StatelessWidget{
                   ),
                 ]
             )
-        )
+        ),
+
     );
   }
 }
