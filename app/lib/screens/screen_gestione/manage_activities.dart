@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app2/screens/screen_gestione/insert_user.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 DataRepository repository = DataRepository();
 
@@ -15,15 +13,17 @@ class ManageActivities extends StatefulWidget{
 }
 
 class _ManageActivitiesState extends State<ManageActivities> {
-  List<Utente> utenti = [];
-  List<Utente>filtered_users = [];
+  //List<Utente> utenti = [];
+  //List<Utente>filtered_users = [];
   DateTime selectedDate = DateTime.now();
+
+
 
   @override
   Widget build(BuildContext context) {
-    RouteSettings? settings = ModalRoute.of(context)?.settings;
+    /*RouteSettings? settings = ModalRoute.of(context)?.settings;
     utenti =  settings?.arguments as List<Utente>;
-    filtered_users = repository.filterUserActivities(utenti, selectedDate);
+    filtered_users = repository.filterUserActivities(utenti, selectedDate);*/
 
     return Scaffold(
       appBar: AppBar(title: Text("Gestisci attività giornaliera")),
@@ -48,41 +48,41 @@ class _ManageActivitiesState extends State<ManageActivities> {
                   ],
                 ),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
+              Row(
+                children:[
+                  Container(
+                    alignment: Alignment.topLeft,
+                    height: 60,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                    child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
+                  ),
+                  Container(
+                    height: 60,
+                    alignment: Alignment.topRight,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.lightBlueAccent,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          onPressed: (){
+                            Navigator.pushNamed(context, '/insert_activity');
+                          },
+                          icon: const Icon(Icons.add),
+                          iconSize: 40,
+                          color: Colors.white,
+                        )
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: ListView.builder(
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: filtered_users.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 150,
-                      child: Column(
-                        children: [
-                          Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text((filtered_users[index].nome ?? "") + " " + (filtered_users[index].cognome ?? ""), style: Theme.of(context).textTheme.headline4),
-                                ],
-                              )
-                          ),
-                        ],
-                      )
-                    );
-                  },
-                ),
-              ),
+              activityWidget(),
             ],
         )),
     );
-
   }
 
   _selectDate(BuildContext context) async {
@@ -100,6 +100,45 @@ class _ManageActivitiesState extends State<ManageActivities> {
       setState(() {
         selectedDate = selected;
       });
+  }
+
+
+  Widget activityWidget() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) {
+          //print('project snapshot data is: ${projectSnap.data}');
+          return Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, index) {
+            Utente utente = snapshot.data[index];
+            return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.supervised_user_circle),
+                      title: Text((utente.nome ?? "") + " " + (utente.cognome ?? "")),
+                      subtitle: Text("Username: "+ (utente.username ?? "")),
+                    ),
+                  ],
+                )
+            );
+          },
+        );
+      },
+      future: _getFilteredUsers(),
+    );
+  }
+
+  _getFilteredUsers() async {
+    List<Utente> users = await repository.getAllUsers() as List<Utente>;
+    List filtered_users = repository.filterUserActivities(users, selectedDate);
+    return filtered_users;
   }
 
 }

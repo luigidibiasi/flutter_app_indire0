@@ -30,9 +30,10 @@ class MenuAdmin extends StatelessWidget{
                 margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
                 child: ElevatedButton(
                   onPressed: () async {
-                    List<Utente> utenti = await repository.getAllUsers();
+                    //List<Utente> utenti = await repository.getAllUsers();
                     //print(utenti.length);
-                    Navigator.pushNamed(context, '/manage_users', arguments: utenti);
+                    //Navigator.pushNamed(context, '/manage_users', arguments: utenti);
+                    Navigator.pushNamed(context, '/manage_users');
                   },
                   child: Text("Gestisci utenti"),
                 ),

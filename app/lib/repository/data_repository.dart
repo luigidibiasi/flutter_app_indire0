@@ -65,6 +65,20 @@ class DataRepository {
     return exists;
   }
 
+  Future<Utente?> getByUsername(String username) async {
+    Utente? utente;
+    await collection.where('username', isEqualTo: username)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        utente = Utente.fromJson(data!);
+        utente?.referenceId = doc.reference.id;
+      });
+    });
+    return utente;
+  }
+
   Future<bool> checkEmail(String email) async {
     bool exists = false;
     await collection.where('email', isEqualTo: email)
@@ -103,4 +117,25 @@ class DataRepository {
     return filtered_users;
   }
 
+  List<Utente> getAvailableUsers(List<Utente> utenti, DateTime date, TimeOfDay start, TimeOfDay end){
+    double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute/60.0;
+    List<Utente> filtered_users = [];
+    bool available = true;
+    utenti.forEach((element) {
+      List<Attivita>? lista = element.listaAttivita;
+      for (var a in lista!){
+        if (a.data == date){
+          if (!(toDouble(a.orainizio!) > toDouble(start) && toDouble(end) <= toDouble(a.orainizio!)) ||
+              !(toDouble(start) > toDouble(a.orainizio!) && toDouble(start) <= toDouble(a.orafine!))) {
+            available = false;
+            break;
+          }
+        }
+      }
+      if (available){
+        filtered_users.add(element);
+      }
+    });
+    return filtered_users;
+  }
 }

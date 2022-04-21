@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/screens/screen_gestione/insert_user.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
@@ -15,17 +16,18 @@ class ManageUsers extends StatefulWidget{
 }
 
 class _ManageUsersState extends State<ManageUsers> {
-  List<Utente> utenti = [];
+  //List<Utente> utenti = [];
 
   @override
   Widget build(BuildContext context) {
-    RouteSettings? settings = ModalRoute.of(context)?.settings;
-    utenti =  settings?.arguments as List<Utente>;
+    //RouteSettings? settings = ModalRoute.of(context)?.settings;
+    //utenti =  settings?.arguments as List<Utente>;
+    //_getUtenti();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Gestisci utenti")),
+        appBar: AppBar(title: Text("Gestisci utenti")),
         drawer: NavDrawerAdmin(),
-      body: Padding(
+        body: Padding(
           padding: const EdgeInsets.all(20),
           child: ListView(
             children: <Widget>[
@@ -40,77 +42,89 @@ class _ManageUsersState extends State<ManageUsers> {
                       alignment: Alignment.topRight,
                       padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: ElevatedButton(
-                        onPressed: (){
-                          Navigator.pushReplacementNamed(context, '/insert_user');
-                        },
-                        child: Text("Ins"),
-                      )
+                      child: Ink(
+                          decoration: const ShapeDecoration(
+                            color: Colors.lightBlueAccent,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                          onPressed: (){
+                            Navigator.pushNamed(context, '/insert_user');
+                          },
+                          icon: const Icon(Icons.add),
+                          iconSize: 40,
+                          color: Colors.white,
+                        )
+                      ),
                   ),
                 ],
               ),
-              ListView.builder(
-                physics: ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: utenti.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: 150,
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text((utenti[index].nome ?? "") + " " + (utenti[index].cognome ?? ""), style: Theme.of(context).textTheme.headline4),
-                              Text("Username: "+ (utenti[index].username ?? ""), style: Theme.of(context).textTheme.headline4),
-                            ],
-                          )
-                        ),
-                        Container(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    height: 60,
-                                    alignment: Alignment.topRight,
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: ElevatedButton(
-                                      onPressed: (){
-                                        _deleteUser(utenti[index]);
-                                        setState(() {});
-                                      },
-                                      child: Text("Cancella utente"),
-                                    )
-                                ),
-                                Container(
-                                    height: 60,
-                                    alignment: Alignment.topRight,
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                    child: ElevatedButton(
-                                      onPressed: (){
-                                        Navigator.pushNamed(context, '/insert_user');
-                                      },
-                                      child: Text("Modifica utente"),
-                                    )
-                                ),
-                              ],
-                            )
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+              userWidget(),
             ],
           ),
-      )
+        )
+    );
+  }
+
+  Widget userWidget() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) {
+          //print('project snapshot data is: ${projectSnap.data}');
+          return Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              Utente utente = snapshot.data[index];
+              return Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.supervised_user_circle),
+                        title: Text((utente.nome ?? "") + " " + (utente.cognome ?? "")),
+                        subtitle: Text("Username: "+ (utente.username ?? "")),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          ElevatedButton(
+                            child: const Text('Cancella utente'),
+                            onPressed: () {
+                              _deleteUser(utente);
+                              setState(() {});},
+                          ),
+                          //const SizedBox(width: 8),
+                          ElevatedButton(
+                            child: const Text('Modifica utente'),
+                            onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente.username);},
+                          ),
+                          //const SizedBox(width: 8),
+                        ],
+                      )
+                    ],
+                  )
+              );
+            },
+          );
+      },
+      future: _getUtenti(),
     );
   }
 
   void _deleteUser(Utente u){
-    //repository.deleteUtente(u);
-    utenti.remove(u);
+    repository.deleteUtente(u);
+    //utenti.remove(u);
+  }
+
+  _getUtenti() async {
+    //utenti = await repository.getAllUsers() as List<Utente>;
+    List users = await repository.getAllUsers();
+    return users;
+    //print(utenti.length);
   }
 
 }

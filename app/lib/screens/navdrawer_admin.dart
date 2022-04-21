@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/services/secure_storage.dart';
 
 class NavDrawerAdmin extends StatelessWidget {
+  final StorageService _storageService = StorageService();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,6 +30,10 @@ class NavDrawerAdmin extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.supervised_user_circle),
             title: Text('Esci'),
+            onTap: () {
+              _storageService.deleteAllSecureData();
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),

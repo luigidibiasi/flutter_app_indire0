@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/models/storageitem.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app2/services/secure_storage.dart';
 
 DataRepository repository = DataRepository();
 //final newUser = Utente('admin', nome:'Maria', cognome: 'Natale', email: 'maria_girl.98@hotmail.it', password:'maria',
@@ -17,7 +18,7 @@ class Login extends StatefulWidget{
 class _LoginState extends State<Login>{
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  final StorageService _storageService = StorageService();
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,20 @@ class _LoginState extends State<Login>{
                     var result = repository.checkCredentials(usernameController.text, passwordController.text);
                     Utente? utente = await result;
                     if (utente!= null){
-                      Navigator.pushNamed(context, '/menu_admin');
+                      StorageItem itemUsername = StorageItem('username', usernameController.text);
+                      StorageItem itemPassword = StorageItem('password', passwordController.text);
+                      _storageService.writeSecureData(itemUsername);
+                      _storageService.writeSecureData(itemPassword);
+                      if (utente.admin!) {
+                        StorageItem itemAdmin = StorageItem('admin', 'true');
+                        _storageService.writeSecureData(itemAdmin);
+                        Navigator.pushNamed(context, '/menu_admin');
+                      }
+                      else{
+                        StorageItem itemAdmin = StorageItem('admin', 'false');
+                        _storageService.writeSecureData(itemAdmin);
+                        Navigator.pushNamed(context, '/menu_utente');
+                      }
                     }
                     else{
                       _showErrorDialog();

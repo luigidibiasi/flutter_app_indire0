@@ -9,7 +9,7 @@ class Utente {
   String? password;
   String? telefono;
   bool? admin;
-  List<Attivita>? listaAttivita;
+  List<Attivita>? listaAttivita = [];
   String? referenceId;
 
   Utente(this.username, {this.nome, this.cognome, this.email, this.password, this.telefono, this.admin, this.listaAttivita, this.referenceId});
@@ -40,9 +40,9 @@ Utente _utenteFromJson(Map<String, dynamic> json) {
     listaAttivita:  _convertiAttivita(json['listaAttivita'] as List<dynamic>));
 }
 
-List<Attivita> _convertiAttivita(List<dynamic> vaccinationMap) {
+List<Attivita> _convertiAttivita(List<dynamic> activitiesMap) {
   final activities = <Attivita>[];
-  for (final activity in vaccinationMap) {
+  for (final activity in activitiesMap) {
     activities.add(Attivita.fromJson(activity as Map<String, dynamic>));
   }
   return activities;

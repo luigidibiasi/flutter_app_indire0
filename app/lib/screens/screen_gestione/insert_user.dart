@@ -1,8 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_app2/screens/navdrawer_admin.dart';
 
 DataRepository repository = DataRepository();
 
@@ -26,6 +25,7 @@ class _InsertUserState extends State<InsertUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Registra nuovo utente")),
+      drawer: NavDrawerAdmin(),
       body: Padding(
           padding: const EdgeInsets.all(50),
           child: ListView(
@@ -110,8 +110,9 @@ class _InsertUserState extends State<InsertUser> {
                     print(usernameController.text);
                     print(passwordController.text);
                     if (await _validate()){
-                      List<Utente> utenti = await repository.getAllUsers();
-                      Navigator.pushReplacementNamed(context, '/manage_users', arguments: utenti);
+                      //List<Utente> utenti = await repository.getAllUsers();
+                      //Navigator.pushReplacementNamed(context, '/manage_users', arguments: utenti);
+                      Navigator.pop(context);
                     }
                   },
                   child: Text("Registra utente"),
