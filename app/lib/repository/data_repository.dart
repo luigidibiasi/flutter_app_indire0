@@ -108,7 +108,7 @@ class DataRepository {
     utenti.forEach((element) {
       List<Attivita>? lista = element.listaAttivita;
       for (var a in lista!){
-        if (a.data == date){
+        if (a.data?.day == date.day){
           filtered_users.add(element);
           break;
         }
@@ -117,14 +117,27 @@ class DataRepository {
     return filtered_users;
   }
 
-  List<Utente> getAvailableUsers(List<Utente> utenti, DateTime date, TimeOfDay start, TimeOfDay end){
-    double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute/60.0;
-    List<Utente> filtered_users = [];
-    bool available = true;
+  Map<Attivita, Utente> getUserAndActivities(List<Utente> utenti, DateTime date){
+    Map<Attivita, Utente> activities = {};
     utenti.forEach((element) {
       List<Attivita>? lista = element.listaAttivita;
       for (var a in lista!){
-        if (a.data == date){
+        if (a.data?.day == date.day){
+          activities[a] = element;
+        }
+      }
+    });
+    return activities;
+  }
+
+  List<Utente> getAvailableUsers(List<Utente> utenti, DateTime date, TimeOfDay start, TimeOfDay end){
+    double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute/60.0;
+    List<Utente> filtered_users = [];
+    utenti.forEach((element) {
+      bool available = true;
+      List<Attivita>? lista = element.listaAttivita;
+      for (var a in lista!){
+        if (a.data?.day == date.day){
           if (!(toDouble(a.orainizio!) > toDouble(start) && toDouble(end) <= toDouble(a.orainizio!)) ||
               !(toDouble(start) > toDouble(a.orainizio!) && toDouble(start) <= toDouble(a.orafine!))) {
             available = false;

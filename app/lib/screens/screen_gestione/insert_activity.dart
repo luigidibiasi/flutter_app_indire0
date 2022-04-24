@@ -137,12 +137,16 @@ class _InsertActivityState extends State<InsertActivity> {
 
   Future<bool> _validate() async {
     //check data
+    if (dropDownValue == null){
+      _showErrorDialog("Seleziona l'utente a cui vuoi assegnare l'attività!");
+      return false;
+    }
 
     Utente? utente = await repository.getByUsername(dropDownValue!) as Utente?;
     print(utente);
+
     Attivita a = Attivita(selectedDate, start, end);
     utente?.listaAttivita?.add(a);
-    print("aggiungo");
     repository.updateUtente(utente!);
     return true;
   }
@@ -150,6 +154,7 @@ class _InsertActivityState extends State<InsertActivity> {
   _searchUsers() async{
     List<Utente> utenti = await repository.getAllUsers() as List<Utente>;
     List<Utente> availableusers = repository.getAvailableUsers(utenti, selectedDate, start, end);
+    print(availableusers.length);
     return availableusers;
   }
 

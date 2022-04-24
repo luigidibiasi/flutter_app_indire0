@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1034649923031",
+    "project_id": "devivo-indire2022",
+    "storage_bucket": "devivo-indire2022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034649923031:android:90c01164ca81bd5af7af92",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034649923031-32sdtf9717843fm6fqv26odauqmbg35p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPyn7FNwF8FNRTWu5Yvz3KOysVxm4Vkw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034649923031-32sdtf9717843fm6fqv26odauqmbg35p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

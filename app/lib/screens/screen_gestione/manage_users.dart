@@ -37,32 +37,16 @@ class _ManageUsersState extends State<ManageUsers> {
                     alignment: Alignment.topLeft,
                     child: Text("Lista utenti", style: Theme.of(context).textTheme.headline2),
                   ),
-                  Container(
-                      height: 60,
-                      alignment: Alignment.topRight,
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Ink(
-                          decoration: const ShapeDecoration(
-                            color: Colors.lightBlueAccent,
-                            shape: CircleBorder(),
-                          ),
-                          child: IconButton(
-                          onPressed: (){
-                            Navigator.pushNamed(context, '/insert_user');
-                          },
-                          icon: const Icon(Icons.add),
-                          iconSize: 40,
-                          color: Colors.white,
-                        )
-                      ),
-                  ),
                 ],
               ),
               userWidget(),
             ],
           ),
-        )
+        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () { Navigator.pushNamed(context, '/insert_user');},
+        child: Icon(Icons.add),
+      ),
     );
   }
 

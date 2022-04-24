@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
 import '../../models/utente.dart';
+import '../../models/attivita.dart';
 import '../../repository/data_repository.dart';
 
 DataRepository repository = DataRepository();
@@ -13,17 +14,10 @@ class ManageActivities extends StatefulWidget{
 }
 
 class _ManageActivitiesState extends State<ManageActivities> {
-  //List<Utente> utenti = [];
-  //List<Utente>filtered_users = [];
   DateTime selectedDate = DateTime.now();
-
-
 
   @override
   Widget build(BuildContext context) {
-    /*RouteSettings? settings = ModalRoute.of(context)?.settings;
-    utenti =  settings?.arguments as List<Utente>;
-    filtered_users = repository.filterUserActivities(utenti, selectedDate);*/
 
     return Scaffold(
       appBar: AppBar(title: Text("Gestisci attività giornaliera")),
@@ -48,40 +42,20 @@ class _ManageActivitiesState extends State<ManageActivities> {
                   ],
                 ),
               ),
-              Row(
-                children:[
-                  Container(
-                    alignment: Alignment.topLeft,
-                    height: 60,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                    child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
-                  ),
-                  Container(
-                    height: 60,
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.lightBlueAccent,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          onPressed: (){
-                            Navigator.pushNamed(context, '/insert_activity');
-                          },
-                          icon: const Icon(Icons.add),
-                          iconSize: 40,
-                          color: Colors.white,
-                        )
-                    ),
-                  ),
-                ],
+              Container(
+                alignment: Alignment.topLeft,
+                height: 60,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
               ),
               activityWidget(),
             ],
         )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () { Navigator.pushNamed(context, '/insert_activity'); },
+        child: Icon(Icons.add),
+      ),
     );
   }
 
@@ -115,15 +89,38 @@ class _ManageActivitiesState extends State<ManageActivities> {
           physics: ScrollPhysics(),
           itemCount: snapshot.data.length,
           itemBuilder: (context, index) {
-            Utente utente = snapshot.data[index];
+            Attivita attivita = snapshot.data.keys.elementAt(index);
+            Utente utente = snapshot.data.values.elementAt(index);
             return Card(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ListTile(
-                      leading: Icon(Icons.supervised_user_circle),
+                      leading: Icon(Icons.calendar_today),
                       title: Text((utente.nome ?? "") + " " + (utente.cognome ?? "")),
-                      subtitle: Text("Username: "+ (utente.username ?? "")),
+                      subtitle: Column(
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                                children: [Text("Ora inizio: "+ (attivita.orainizio?.hour.toString() ?? "")+":"+(attivita.orainizio?.minute.toString() ?? "")
+                              + "\nOra fine:" +  (attivita.orafine?.hour.toString() ?? "")+":"+(attivita.orafine?.minute.toString() ?? ""),
+                              )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                TextButton(child: Text('Modifica'), onPressed: () {
+                                    Navigator.pushNamed(context, '/modify_activity', arguments: [utente, attivita]).then((_) => setState(() {}));
+                                }),
+                                TextButton(child: Text('Elimina'), onPressed: () {
+                                  _deleteActivity(attivita, utente);
+                                  setState(() {
+                                  });
+                                })
+                              ],
+                            )
+                          ]
+                      )
                     ),
                   ],
                 )
@@ -137,10 +134,14 @@ class _ManageActivitiesState extends State<ManageActivities> {
 
   _getFilteredUsers() async {
     List<Utente> users = await repository.getAllUsers() as List<Utente>;
-    List filtered_users = repository.filterUserActivities(users, selectedDate);
-    return filtered_users;
+    Map activities = repository.getUserAndActivities(users, selectedDate);
+    return activities;
   }
 
+  _deleteActivity(Attivita a, Utente u){
+    u.deleteActivity(a);
+    repository.updateUtente(u);
+  }
 }
 
 

@@ -25,6 +25,10 @@ class Utente {
 
   @override
   String toString() => 'Utente<$username>';
+
+  void deleteActivity(Attivita activity){
+    this.listaAttivita?.remove(activity);
+  }
 }
 
 
