@@ -5,9 +5,20 @@ import 'package:flutter_app2/services/secure_storage.dart';
 import 'package:flutter_app2/models/storageitem.dart';
 import '../../repository/data_repository.dart';
 import '../models/utente.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 DataRepository repository = DataRepository();
 //final newUser = Utente('devivoadmin@info.it', nome:'Maria', cognome: 'Natale', password:'admin.', telefono: '333544', admin: true, listaAttivita: []);
+
+
+final Email send_email = Email(
+  body: 'body of email',
+  subject: 'subject of email',
+  recipients: ['maria_girl.98@hotmail.it'],
+  isHTML: false,
+);
+
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,7 +33,7 @@ class _MySplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _checkStorage();
-    Timer(Duration(seconds: 3), () => {Navigator.pushNamed(context, route)});
+    Timer(Duration(seconds: 3), () => {Navigator.pushReplacementNamed(context, route)});
   }
 
   @override
@@ -33,8 +44,10 @@ class _MySplashScreenState extends State<SplashScreen> {
     return Material(
         color: Colors.white,
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, route);
+        onTap: () async {
+          print("Invio");
+          await FlutterEmailSender.send(send_email);
+          Navigator.pushReplacementNamed(context, route);
           },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.0),

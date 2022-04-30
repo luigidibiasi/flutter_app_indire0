@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/attivita.dart';
+import '../../models/attivita.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';

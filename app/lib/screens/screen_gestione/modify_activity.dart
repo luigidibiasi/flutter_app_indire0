@@ -3,6 +3,7 @@ import 'package:flutter_app2/models/attivita.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 DataRepository repository = DataRepository();
 
@@ -129,8 +130,24 @@ class _ModifyActivityState extends State<ModifyActivity> {
     utente_new?.listaAttivita?.add(a);
     utente.listaAttivita?.remove(a);
     repository.updateUtente(utente);
+    final Email email_cancellazione = Email(
+      body: "L'attività prevista in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"
+          " dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute} è stata assegnata ad un nuovo utente",
+      subject: 'cancellazione attività',
+      recipients: [utente.email!],
+      isHTML: false,
+    );
+    FlutterEmailSender.send(email_cancellazione);
 
     repository.updateUtente(utente_new!);
+    final Email email_assegnazione = Email(
+      body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
+          ' dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute}',
+      subject: 'assegnazione nuova attività',
+      recipients: [utente_new.email!],
+      isHTML: false,
+    );
+    FlutterEmailSender.send(email_assegnazione);
     return true;
   }
 

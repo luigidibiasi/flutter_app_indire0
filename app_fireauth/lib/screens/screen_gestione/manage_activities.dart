@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
 import '../../models/utente.dart';
-import '../../services/attivita.dart';
+import '../../models/attivita.dart';
 import '../../repository/data_repository.dart';
 
 DataRepository repository = DataRepository();

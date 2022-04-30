@@ -14,6 +14,8 @@ class Validator {
     if (email == null) {
       return null;
     }
+
+    email = email.trim();
     RegExp emailRegExp = RegExp(
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
@@ -25,6 +27,7 @@ class Validator {
 
     return null;
   }
+
 
   static String? validatePassword({required String password}) {
     if (password == null) {
@@ -43,7 +46,7 @@ class Validator {
     if (telefono == null) {
       return null;
     }
-
+    telefono = telefono.trim();
     RegExp emailRegExp = RegExp(r"^[0-9]{10}");
     
     if (telefono.isEmpty) {

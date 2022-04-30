@@ -18,91 +18,102 @@ class Login extends StatefulWidget{
 class _LoginState extends State<Login>{
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   final StorageService _storageService = StorageService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Accedi")),
-      body: Padding(
-          padding: const EdgeInsets.all(50),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(30),
-                child: Image.asset('assets/img/logo.png',
-                  fit: BoxFit.contain,
-                  width: 200,),
+      body: Center(
+          child: Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: TextField(
-                  controller: usernameController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
-                    labelText: 'Username',
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
-                child: TextField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
-                    labelText: 'Password',
-                  ),
-                ),
-              ),
-              Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    print(usernameController.text);
-                    print(passwordController.text);
-                    var result = repository.checkCredentials(usernameController.text, passwordController.text);
-                    Utente? utente = await result;
-                    if (utente!= null){
-                      StorageItem itemUsername = StorageItem('username', usernameController.text);
-                      StorageItem itemPassword = StorageItem('password', passwordController.text);
-                      _storageService.writeSecureData(itemUsername);
-                      _storageService.writeSecureData(itemPassword);
-                      if (utente.admin!) {
-                        StorageItem itemAdmin = StorageItem('admin', 'true');
-                        _storageService.writeSecureData(itemAdmin);
-                        Navigator.pushNamed(context, '/menu_admin');
-                      }
-                      else{
-                        StorageItem itemAdmin = StorageItem('admin', 'false');
-                        _storageService.writeSecureData(itemAdmin);
-                        Navigator.pushNamed(context, '/menu_utente');
-                      }
-                    }
-                    else{
-                      _showErrorDialog();
-                    }
-                  },
-                  child: Text("Login"),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  const Text('Hai bisogno di aiuto?'),
-                  TextButton(
-                    child: Text(
-                        'Conattataci',
-                        style: Theme.of(context).textTheme.bodyText2),
-                    onPressed: (){
-                    },
+              margin: EdgeInsets.all(30),
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                  child: ListView(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(30),
+                        child: Image.asset('assets/img/logo.png',
+                          fit: BoxFit.contain,
+                          width: 200,),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        child: TextField(
+                          controller: usernameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                            labelText: 'Username',
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+                        child: TextField(
+                          obscureText: true,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                            labelText: 'Password',
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            print(usernameController.text);
+                            print(passwordController.text);
+                            var result = repository.checkCredentials(usernameController.text, passwordController.text);
+                            Utente? utente = await result;
+                            if (utente!= null){
+                              StorageItem itemUsername = StorageItem('username', usernameController.text);
+                              StorageItem itemPassword = StorageItem('password', passwordController.text);
+                              _storageService.writeSecureData(itemUsername);
+                              _storageService.writeSecureData(itemPassword);
+                              if (utente.admin!) {
+                                StorageItem itemAdmin = StorageItem('admin', 'true');
+                                _storageService.writeSecureData(itemAdmin);
+                                Navigator.pushNamed(context, '/menu_admin');
+                              }
+                              else{
+                                StorageItem itemAdmin = StorageItem('admin', 'false');
+                                _storageService.writeSecureData(itemAdmin);
+                                Navigator.pushNamed(context, '/menu_utente');
+                              }
+                            }
+                            else{
+                              _showErrorDialog();
+                            }
+                          },
+                          child: Text("Login"),
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          const Text('Hai bisogno di aiuto?'),
+                          TextButton(
+                            child: Text(
+                                'Contattataci',
+                                style: Theme.of(context).textTheme.bodyText2),
+                            onPressed: (){
+                            },
+                          )
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ],
                   )
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
               ),
-            ],
-          )),
+          )
+      )
     );
   }
 

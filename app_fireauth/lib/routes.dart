@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app2/screens/screen_gestione/insert_activity.dart';
+import 'package:flutter_app2/screens/screen_gestione/modify_user.dart';
 import 'package:flutter_app2/screens/screen_home/homepage.dart';
 import 'package:flutter_app2/screens/splash_screen.dart';
 import 'package:flutter_app2/screens/screen_login/login.dart';
@@ -21,4 +22,5 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
     '/manage_activities': (context) => ManageActivities(),
     '/insert_activity': (context) => InsertActivity(),
     '/modify_activity': (context) => ModifyActivity(),
+    '/modify_user': (context) => ModifyUser(),
 };

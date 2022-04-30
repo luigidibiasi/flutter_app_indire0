@@ -47,13 +47,13 @@ class _ManageActivitiesState extends State<ManageActivities> {
                 height: 60,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
+                child: Text("Lista delle attività giornaliere", style: Theme.of(context).textTheme.headline6),
               ),
               activityWidget(),
             ],
         )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.pushNamed(context, '/insert_activity'); },
+        onPressed: () { Navigator.pushNamed(context, '/insert_activity').then((_) => setState(() {}));},
         child: Icon(Icons.add),
       ),
     );
@@ -103,7 +103,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
                           children: [
                             Row(
                                 children: [Text("Ora inizio: "+ (attivita.orainizio?.hour.toString() ?? "")+":"+(attivita.orainizio?.minute.toString() ?? "")
-                              + "\nOra fine:" +  (attivita.orafine?.hour.toString() ?? "")+":"+(attivita.orafine?.minute.toString() ?? ""),
+                              + "\nOra fine: " +  (attivita.orafine?.hour.toString() ?? "")+":"+(attivita.orafine?.minute.toString() ?? ""),
                               )
                               ],
                             ),

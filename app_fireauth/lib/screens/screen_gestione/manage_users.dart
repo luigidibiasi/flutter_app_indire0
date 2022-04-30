@@ -70,7 +70,7 @@ class _ManageUsersState extends State<ManageUsers> {
                       ListTile(
                         leading: Icon(Icons.supervised_user_circle),
                         title: Text((utente.nome ?? "") + " " + (utente.cognome ?? "")),
-                        subtitle: Text("Username: "+ (utente.email ?? "")),
+                        subtitle: Text("Email: "+ (utente.email ?? "")),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -84,7 +84,7 @@ class _ManageUsersState extends State<ManageUsers> {
                           //const SizedBox(width: 8),
                           ElevatedButton(
                             child: const Text('Modifica utente'),
-                            onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente.email).then((_) => setState(() {}));;},
+                            onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente).then((_) => setState(() {}));;},
                           ),
                           //const SizedBox(width: 8),
                         ],

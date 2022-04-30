@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/attivita.dart';
+import 'attivita.dart';
 
 class Utente {
   String? nome;

@@ -3,6 +3,7 @@ import 'package:flutter_app2/models/attivita.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 DataRepository repository = DataRepository();
 
@@ -30,81 +31,90 @@ class _InsertActivityState extends State<InsertActivity> {
     return Scaffold(
       appBar: AppBar(title: Text("Inserisci attività")),
       drawer: NavDrawerAdmin(),
-      body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Center(
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: EdgeInsets.all(30),
+          child: Container(
+            height: 400,
+            child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: ListView(
                   children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        _selectDate(context);
-                      },
-                      child: Text("Scegli data"),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              _selectDate(context);
+                            },
+                            child: Text("Scegli data"),
+                          ),
+                          Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
+                        ],
+                      ),
                     ),
-                    Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: 60,
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                _selectStartTime(context);
+                                end = _initializeEnd();
+                                setState(() {
+                                });
+                              },
+                              child: Text("Scegli orario di inizio"),
+                            ),
+                            Text("${start.hour}:${start.minute}"),
+                          ]
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: 60,
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                _selectEndTime(context);
+                              },
+                              child: Text("Scegli orario di fine"),
+                            ),
+                            Text("${end.hour}:${end.minute}"),
+                          ]
+                      ),
+                    ),
+                    Center(
+                      child: availableUserWidget(),
+                    ),
+                    Container(
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (await _validate()){
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text("Assegna attività"),
+                      ),
+                    ),
+                    //activityWidget(),
                   ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                height: 60,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Row(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          _selectStartTime(context);
-                          end = _initializeEnd();
-                          setState(() {
-                          });
-                        },
-                        child: Text("Scegli orario di inizio"),
-                      ),
-                      Text("${start.hour}:${start.minute}"),
-                      ]
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                height: 60,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: Row(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          _selectEndTime(context);
-                        },
-                        child: Text("Scegli orario di fine"),
-                      ),
-                      Text("${end.hour}:${end.minute}"),
-                    ]
-                ),
-              ),
-              Center(
-               child: availableUserWidget(),
-              ),
-              Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (await _validate()){
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text("Assegna attività"),
-                ),
-              ),
-              //activityWidget(),
-            ],
-          )),
+                )),
+          )
+        )
+      )
     );
   }
 
@@ -148,6 +158,16 @@ class _InsertActivityState extends State<InsertActivity> {
     Attivita a = Attivita(selectedDate, start, end);
     utente?.listaAttivita?.add(a);
     repository.updateUtente(utente!);
+
+    final Email send_email = Email(
+      body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
+          ' dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute}',
+      subject: 'assegnazione nuova attività',
+      recipients: [utente.email!],
+      isHTML: false,
+    );
+    FlutterEmailSender.send(send_email);
+
     return true;
   }
 

@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app2/services/secure_storage.dart';
 import 'package:flutter_app2/models/storageitem.dart';
 import '../../repository/data_repository.dart';
+import 'package:flutter_app2/models/utente.dart';
 
 DataRepository repository = DataRepository();
+/*final newUser = Utente('admin', nome:'Maria', cognome: 'Natale', email: 'maria_girl.98@hotmail.it', password:'maria',
+telefono: '333544', admin: true, listaAttivita: []);*/
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -20,7 +24,7 @@ class _MySplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _checkStorage();
-    Timer(Duration(seconds: 3), () => {Navigator.pushNamed(context, route)});
+    Timer(Duration(seconds: 3), () => {Navigator.pushReplacementNamed(context, route)});
   }
 
   @override
@@ -32,7 +36,8 @@ class _MySplashScreenState extends State<SplashScreen> {
         color: Colors.white,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, route);
+          //repository.addUtente(newUser);
+          Navigator.pushReplacementNamed(context, route);
           },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.0),

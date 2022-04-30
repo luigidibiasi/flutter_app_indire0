@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/attivita.dart';
+import '../../models/attivita.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
@@ -117,10 +117,10 @@ class _InsertActivityState extends State<InsertActivity> {
         }
         return Container(
           child: DropdownButton<String>(
-            hint: Text(dropDownValue ?? 'Make a selection'),
+            hint: Text(dropDownValue ?? 'Seleziona utente'),
             items: snapshot.data.map<DropdownMenuItem<String>>((item) {
               return DropdownMenuItem<String>(
-                value: item.username,
+                value: item.email,
                 child: Text(item.nome + " " + item.cognome),
               );
             }).toList(),

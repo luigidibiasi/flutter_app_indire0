@@ -1,4 +1,4 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -63,5 +63,29 @@ class FireAuth {
     User? refreshedUser = auth.currentUser;
 
     return refreshedUser;
+  }
+
+  static Future resetEmail(String newEmail) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    var message;
+    /*User? firebaseUser = await auth.currentUser!;
+    firebaseUser.updateEmail(newEmail)
+        .then(
+          (value) => message = 'Success',
+    )
+        .catchError((onError) => message = 'error');
+    return message;*/
+  }
+
+  static Future resetPassword(String newPassword) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    var message;
+    /*User? firebaseUser = await auth.currentUser!;
+    firebaseUser.updatePassword(newPassword)
+        .then(
+          (value) => message = 'Success',
+    )
+        .catchError((onError) => message = 'error');
+    return message;*/
   }
 }

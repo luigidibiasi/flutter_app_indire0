@@ -44,7 +44,7 @@ class _ManageUsersState extends State<ManageUsers> {
           ),
         ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.pushNamed(context, '/insert_user');},
+        onPressed: () { Navigator.pushNamed(context, '/insert_user').then((_) => setState(() {}));},
         child: Icon(Icons.add),
       ),
     );
@@ -75,17 +75,21 @@ class _ManageUsersState extends State<ManageUsers> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          ElevatedButton(
-                            child: const Text('Cancella utente'),
-                            onPressed: () {
-                              _deleteUser(utente);
-                              setState(() {});},
-                          ),
+                          Container(
+                              margin: const EdgeInsets.only(right: 5),
+                              child: ElevatedButton(
+                              child: const Text('Cancella utente'),
+                              onPressed: () {
+                                _deleteUser(utente);
+                                setState(() {});},
+                          )),
                           //const SizedBox(width: 8),
-                          ElevatedButton(
-                            child: const Text('Modifica utente'),
-                            onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente.username);},
-                          ),
+                            Container(
+                                margin: const EdgeInsets.only(right: 5),
+                                child: ElevatedButton(
+                                child: const Text('Modifica utente'),
+                                onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente).then((_) => setState(() {}));},
+                            )),
                           //const SizedBox(width: 8),
                         ],
                       )

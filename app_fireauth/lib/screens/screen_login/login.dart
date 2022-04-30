@@ -94,17 +94,20 @@ class _LoginState extends State<Login>{
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           User? user = await FireAuth.signInUsingEmailPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text, context: context,
+                            email: _emailTextController.text.trim(),
+                            password: _passwordTextController.text.trim(), context: context,
                           );
                           if (user != null) {
-                            Utente? utente =  await repository.getByEmail(_emailTextController.text);
+                            Utente? utente =  await repository.getByEmail(_emailTextController.text.trim());
                             if (utente!=null && utente.admin!) {
-                              Navigator.pushNamed(context, '/menu_admin');
+                              Navigator.pushReplacementNamed(context, '/menu_admin');
                             }
                             else{
-                              Navigator.pushNamed(context, '/menu_utente');
+                              Navigator.pushReplacementNamed(context, '/menu_utente');
                             }
+                          }
+                          else{
+                            _showErrorDialog();
                           }
                         }
                       },
@@ -121,7 +124,21 @@ class _LoginState extends State<Login>{
     );
   }
 
-
+  void _showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => new AlertDialog(
+          title: new Text('Warning'),
+          content: new Text('Username e/o password errati'),
+          actions: <Widget>[
+            new IconButton(
+                icon: new Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ));
+  }
 }
 
 
