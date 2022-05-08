@@ -29,11 +29,11 @@ class _ManageUsersState extends State<ManageUsers> {
         drawer: NavDrawerAdmin(),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: Container(
-          width: double.infinity,
+          /*child: Container(
+          //width: double.infinity,
           height: 570,
           margin: EdgeInsets.only(top: 15),
-          /*decoration: BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white30,
             borderRadius: BorderRadius.vertical(top: Radius.circular(34)),
           ),*/
@@ -50,11 +50,11 @@ class _ManageUsersState extends State<ManageUsers> {
                   )
                 ],
               ),
-              Expanded(child: userWidget(),)
+              userWidget(),
             ],
           ),
-        )
         ),
+        //),
       floatingActionButton: FloatingActionButton(
         onPressed: () { Navigator.pushNamed(context, '/insert_user').then((_) => setState(() {}));},
         child: Icon(Icons.add),

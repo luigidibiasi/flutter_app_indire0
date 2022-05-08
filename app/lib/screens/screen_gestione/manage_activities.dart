@@ -170,7 +170,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
 
     final Email email_cancellazione = Email(
       body: "L'attività prevista in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"
-          " dalle ore ${a.orainizio?.hour}: ${a.orainizio?.minute} alle ${a.orafine?.hour}: ${a.orafine?.minute} è stata assegnata ad un nuovo utente",
+          " dalle ore ${a.orainizio?.hour.toString().padLeft(2, '0')}: ${a.orainizio?.minute.toString().padLeft(2, '0')} alle ${a.orafine?.hour.toString().padLeft(2, '0')}: ${a.orafine?.minute.toString().padLeft(2, '0')} è stata assegnata ad un nuovo utente",
       subject: 'cancellazione attività',
       recipients: [u.email!],
       isHTML: false,

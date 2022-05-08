@@ -72,121 +72,114 @@ class _ModifyUserState extends State<ModifyUser> {
                   margin: EdgeInsets.all(30),
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: Expanded(
-                      child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
-                                controller: _emailTextController,
-                                focusNode: _focusEmail,
-                                validator: (value) => Validator.validateEmail(
-                                  email: value!,
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: "Email",
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
-                                  errorBorder: UnderlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 16.0),
-                              TextFormField(
-                                controller: _telefonoTextController,
-                                focusNode: _focusTelefono,
-                                validator: (value) => Validator.validateTelefono(
-                                  telefono: value!,
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: "Telefono",
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
-                                  errorBorder: UnderlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 16.0),
-                              TextFormField(
-                                controller: _passwordTextController,
-                                focusNode: _focusPassword,
-                                obscureText: true,
-                                validator: (value) => Validator.validatePassword(
-                                  password: value!,
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: "Password",
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
-                                  errorBorder: UnderlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 32.0),
-                              Row(
-                                children: [
-                                  Expanded(child: Container(
-                                    height: 50,
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          String email = _emailTextController
-                                              .text.trim();
-                                          String password = _passwordTextController
-                                              .text;
-                                          String telefono = _telefonoTextController
-                                              .text.trim();
-                                          utente?.email = email;
-                                          utente?.password = password;
-                                          utente?.telefono = telefono;
-                                          repository.updateUtente(utente!);
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                AlertDialog(
-                                                  title: Text(
-                                                      'Dati modificati correttamente!'),
-                                                  actions: [
-                                                    ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text('Chiudi'))
-                                                  ],
-                                                ),
-                                          );
-                                        }
-                                      },
-                                      child: Text(
-                                        'Conferma',
-                                        style: TextStyle(color: Colors.white),
+                    child: Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    TextFormField(
+                                      controller: _emailTextController,
+                                      focusNode: _focusEmail,
+                                      validator: (value) => Validator.validateEmail(
+                                        email: value!,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: "Email",
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                                        errorBorder: UnderlineInputBorder(
+                                          borderRadius: BorderRadius.circular(6.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.red,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),)
-                                ],
-                              )
-                            ],
-                          )),
-                      ],
+                                    SizedBox(height: 16.0),
+                                    TextFormField(
+                                      controller: _telefonoTextController,
+                                      focusNode: _focusTelefono,
+                                      validator: (value) => Validator.validateTelefono(
+                                        telefono: value!,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: "Telefono",
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                                        errorBorder: UnderlineInputBorder(
+                                          borderRadius: BorderRadius.circular(6.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 16.0),
+                                    TextFormField(
+                                      controller: _passwordTextController,
+                                      focusNode: _focusPassword,
+                                      obscureText: true,
+                                      validator: (value) => Validator.validatePassword(
+                                        password: value!,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: "Password",
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                                        errorBorder: UnderlineInputBorder(
+                                          borderRadius: BorderRadius.circular(6.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 32.0),
+                                    Row(
+                                      children: [
+                                        Expanded(child: Container(
+                                          height: 50,
+                                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              if (_formKey.currentState!.validate()) {
+                                                if (await _validate()){
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: Text(
+                                                              'Dati modificati correttamente!'),
+                                                          actions: [
+                                                            ElevatedButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Text('Chiudi'))
+                                                          ],
+                                                        ),
+                                                  );
+                                                }
+
+                                              }
+                                            },
+                                            child: Text(
+                                              'Conferma',
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                          ),
+                                        ),)
+                                      ],
+                                    )
+                                  ],
+                                )),
+                          ],
+                        )
+                    )
+                        ),
                     ),
-                  ),
-                ),
-      ),
               ],
             )
 
@@ -195,4 +188,52 @@ class _ModifyUserState extends State<ModifyUser> {
     );
   }
 
+  Future<bool> _validate() async {
+    String email = _emailTextController
+        .text.trim();
+    String password = _passwordTextController
+        .text;
+    String telefono = _telefonoTextController
+        .text.trim();
+
+    print(telefono);
+
+    if (utente?.email != email) {
+      var result = await repository.checkEmail(email);
+      if (result) {
+        _showErrorDialog("Email già usata!");
+        return false;
+      }
+    }
+
+    if (utente?.telefono != telefono) {
+      var result = await repository.checkTelefono(telefono);
+      if (result) {
+        _showErrorDialog("Numero di cellulare non disponibile!");
+        return false;
+      }
+    }
+
+    utente?.email = email;
+    utente?.password = password;
+    utente?.telefono = telefono;
+    repository.updateUtente(utente!);
+    return true;
+  }
+
+  void _showErrorDialog(String text) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => new AlertDialog(
+          title: new Text('Warning'),
+          content: new Text(text),
+          actions: <Widget>[
+            new IconButton(
+                icon: new Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ));
+  }
 }

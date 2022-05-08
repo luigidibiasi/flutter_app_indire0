@@ -186,7 +186,7 @@ class _InsertActivityState extends State<InsertActivity> {
 
     final Email send_email = Email(
       body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
-          ' dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute}',
+          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}',
       subject: 'assegnazione nuova attività',
       recipients: [utente.email!],
       isHTML: false,

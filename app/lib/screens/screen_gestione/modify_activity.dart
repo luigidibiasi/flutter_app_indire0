@@ -144,7 +144,7 @@ class _ModifyActivityState extends State<ModifyActivity> {
     repository.updateUtente(utente);
     final Email email_cancellazione = Email(
       body: "L'attività prevista in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}"
-          " dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute} è stata assegnata ad un nuovo utente",
+          " dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')} è stata assegnata ad un nuovo utente",
       subject: 'cancellazione attività',
       recipients: [utente.email!],
       isHTML: false,
@@ -154,7 +154,7 @@ class _ModifyActivityState extends State<ModifyActivity> {
     repository.updateUtente(utente_new!);
     final Email email_assegnazione = Email(
       body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
-          ' dalle ore ${start.hour}:${start.minute} alle ${end.hour}:${end.minute}',
+          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}',
       subject: 'assegnazione nuova attività',
       recipients: [utente_new.email!],
       isHTML: false,

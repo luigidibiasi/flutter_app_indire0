@@ -93,7 +93,7 @@ class DataRepository {
 
   Future<bool> checkTelefono(String telefono) async {
     bool exists = false;
-    await collection.where('email', isEqualTo: telefono)
+    await collection.where('telefono', isEqualTo: telefono)
         .get()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
