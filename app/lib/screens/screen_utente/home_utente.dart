@@ -59,7 +59,9 @@ class _HomeUserState extends State<HomeUser> {
                     margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
                     child: Text("Lista delle attività giornaliere", style: Theme.of(context).textTheme.headline6),
                   ),
-                  activityWidget(),
+                  Expanded(
+                    child: activityWidget(),
+                  )
                 ],
               ))),
     );
