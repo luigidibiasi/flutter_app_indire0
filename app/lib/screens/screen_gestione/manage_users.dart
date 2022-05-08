@@ -29,19 +29,31 @@ class _ManageUsersState extends State<ManageUsers> {
         drawer: NavDrawerAdmin(),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: ListView(
+          child: Container(
+          width: double.infinity,
+          height: 570,
+          margin: EdgeInsets.only(top: 15),
+          /*decoration: BoxDecoration(
+            color: Colors.white30,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(34)),
+          ),*/
+          child: Column(
             children: <Widget>[
               Row(
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text("Lista utenti", style: Theme.of(context).textTheme.headline2),
-                  ),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, left: 20),
+                    child: Text(
+                      'Lista utenti',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  )
                 ],
               ),
-              userWidget(),
+              Expanded(child: userWidget(),)
             ],
           ),
+        )
         ),
       floatingActionButton: FloatingActionButton(
         onPressed: () { Navigator.pushNamed(context, '/insert_user').then((_) => setState(() {}));},
@@ -57,9 +69,11 @@ class _ManageUsersState extends State<ManageUsers> {
           //print('project snapshot data is: ${projectSnap.data}');
           return Center(child: CircularProgressIndicator());
         }
-        return ListView.builder(
+        return Expanded(
+          child: ListView.builder(
             shrinkWrap: true,
             physics: ScrollPhysics(),
+            scrollDirection: Axis.vertical,
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               Utente utente = snapshot.data[index];
@@ -77,19 +91,39 @@ class _ManageUsersState extends State<ManageUsers> {
                         children: <Widget>[
                           Container(
                               margin: const EdgeInsets.only(right: 5),
-                              child: ElevatedButton(
-                              child: const Text('Cancella utente'),
-                              onPressed: () {
-                                _deleteUser(utente);
-                                setState(() {});},
-                          )),
+                              child: TextButton(child: Text('Modifica'), onPressed: () {
+                                Navigator.pushNamed(context, '/modify_user', arguments: utente).then((_) => setState(() {}));},
+                              )),
+                          Container(
+                              margin: const EdgeInsets.only(right: 5),
+                              child: TextButton(child: Text('Elimina'), onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        AlertDialog(
+                                          title: Text(
+                                              "Sei sicuro di voler eliminare l'utente?"),
+                                          actions: <Widget>[
+                                            new ElevatedButton(
+                                              onPressed: () => Navigator.pop(context), // Closes the dialog
+                                              child: new Text('No'),
+                                            ),
+                                            new ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                _deleteUser(utente);
+                                                setState(() {});
+                                              },
+                                              child: new Text('Yes'),
+                                            ),
+                                          ],
+                                        ),
+                                  );
+                                  //_deleteUser(utente);
+                                  },
+                              )),
                           //const SizedBox(width: 8),
-                            Container(
-                                margin: const EdgeInsets.only(right: 5),
-                                child: ElevatedButton(
-                                child: const Text('Modifica utente'),
-                                onPressed: () {Navigator.pushNamed(context, '/modify_user', arguments: utente).then((_) => setState(() {}));},
-                            )),
+
                           //const SizedBox(width: 8),
                         ],
                       )
@@ -97,7 +131,8 @@ class _ManageUsersState extends State<ManageUsers> {
                   )
               );
             },
-          );
+          ),
+        );
       },
       future: _getUtenti(),
     );
@@ -105,6 +140,22 @@ class _ManageUsersState extends State<ManageUsers> {
 
   void _deleteUser(Utente u){
     repository.deleteUtente(u);
+    showDialog(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            title: Text(
+                'Utente eliminato!'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(
+                        context);
+                  },
+                  child: Text('Chiudi'))
+            ],
+          ),
+    );
     //utenti.remove(u);
   }
 

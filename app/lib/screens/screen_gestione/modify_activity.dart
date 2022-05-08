@@ -31,54 +31,66 @@ class _ModifyActivityState extends State<ModifyActivity> {
     end = attivita.orafine!;
     //utenti =  settings?.arguments as List<Utente>;
     return Scaffold(
-      appBar: AppBar(title: Text("Inserisci attività")),
+      appBar: AppBar(title: Text("Modifica attività")),
       drawer: NavDrawerAdmin(),
-      body: Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(padding: const EdgeInsets.all(20),
-            child: ListView(
-              children: <Widget>[
-                Container(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                    child:
-                    Text("Utente: ${utente.nome} ${utente.cognome}")
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  child:
-                      Text("Data: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
-                  ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  height: 60,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                  child: Row(
-                      children: <Widget>[
-                        Text("Orario: ${start.hour}:${start.minute}"),
-                        Text(" - ${end.hour}:${end.minute}"),
-                      ]
-                  ),
-                ),
-                Center(
-                  child: availableUserWidget(utente),
-                ),
-                Container(
-                  height: 50,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (await _validate(attivita, utente)){
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text("Conferma"),
-                  ),
-                ),
-              ],
-            ))
+      body: Center(
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: EdgeInsets.all(30),
+          child: Container(
+            height: 400,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+                child: ListView(
+                  children: <Widget>[
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                        child:
+                        Text("Utente: ${utente.nome} ${utente.cognome}")
+                    ),
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                        child:
+                        Text("Data: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: 60,
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                      child: Row(
+                          children: <Widget>[
+                            Text("Orario: ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')}"),
+                            Text(" - ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}"),
+                          ]
+                      ),
+                    ),
+                    Center(
+                      child: availableUserWidget(utente),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (await _validate(attivita, utente)){
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text("Conferma"),
+                      ),
+                    ),
+                  ],
+                )
+            )
+          )
+      ),
       ),
     );
   }
@@ -155,6 +167,22 @@ class _ModifyActivityState extends State<ModifyActivity> {
     List<Utente> utenti = await repository.getAllUsers() as List<Utente>;
     List<Utente> availableusers = repository.getAvailableUsers(utenti, selectedDate, start, end);
     print(availableusers.length);
+    if (availableusers.length==0){
+      showDialog(
+          context: context,
+          builder: (context) =>
+          AlertDialog(
+            title: Text(
+                "Nessun utente disponibile nella fascia oraria selezionata!"),
+            actions: <Widget>[
+              new ElevatedButton(
+                onPressed: () => Navigator.pop(context), // Closes the dialog
+                child: new Text('Chiudi'),
+              ),
+            ],
+          )
+      );
+    }
     return availableusers;
   }
 

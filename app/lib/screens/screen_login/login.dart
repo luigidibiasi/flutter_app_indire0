@@ -79,6 +79,7 @@ class _LoginState extends State<Login>{
                               _storageService.writeSecureData(itemUsername);
                               _storageService.writeSecureData(itemPassword);
                               if (utente.admin!) {
+                                print(utente.admin);
                                 StorageItem itemAdmin = StorageItem('admin', 'true');
                                 _storageService.writeSecureData(itemAdmin);
                                 Navigator.pushNamed(context, '/menu_admin');

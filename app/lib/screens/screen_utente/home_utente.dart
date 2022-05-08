@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/models/attivita.dart';
 import 'package:flutter_app2/screens/screen_gestione/insert_user.dart';
 import 'package:flutter_app2/screens/navdrawer_admin.dart';
+import '../../models/storageitem.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../services/secure_storage.dart';
 
 DataRepository repository = DataRepository();
 
@@ -15,74 +19,50 @@ class HomeUser extends StatefulWidget{
 }
 
 class _HomeUserState extends State<HomeUser> {
-  List<Utente> utenti = [];
-  List<Utente>filtered_users = [];
+  final StorageService _storageService = StorageService();
+  var _items;
   DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    RouteSettings? settings = ModalRoute.of(context)?.settings;
-    utenti =  settings?.arguments as List<Utente>;
-    filtered_users = repository.filterUserActivities(utenti, selectedDate);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Gestisci attività giornaliera")),
-        drawer: NavDrawerAdmin(),
+      appBar: AppBar(title: Text("Attività giornaliere")),
+      drawer: NavDrawerAdmin(),
       body: Padding(
           padding: const EdgeInsets.all(20),
-        child: ListView(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        _selectDate(context);
-                      },
-                      child: Text("Scegli data"),
+          child: Container(
+              width: double.infinity,
+              height: 570,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                          child: Text("Scegli data"),
+                        ),
+                        Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
+                      ],
                     ),
-                    Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Text("Lista delle attività gestibili", style: Theme.of(context).textTheme.headline6),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: ListView.builder(
-                  physics: ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: filtered_users.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 150,
-                      child: Column(
-                        children: [
-                          Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text((filtered_users[index].nome ?? "") + " " + (filtered_users[index].cognome ?? ""), style: Theme.of(context).textTheme.headline4),
-                                ],
-                              )
-                          ),
-                        ],
-                      )
-                    );
-                  },
-                ),
-              ),
-            ],
-        )),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    height: 60,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    margin: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                    child: Text("Lista delle attività giornaliere", style: Theme.of(context).textTheme.headline6),
+                  ),
+                  activityWidget(),
+                ],
+              ))),
     );
-
   }
 
   _selectDate(BuildContext context) async {
@@ -102,6 +82,56 @@ class _HomeUserState extends State<HomeUser> {
       });
   }
 
+  Widget activityWidget() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) {
+          //print('project snapshot data is: ${projectSnap.data}');
+          return Center(child: CircularProgressIndicator());
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: ScrollPhysics(),
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, index) {
+            Attivita attivita = snapshot.data[index];
+            return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                        leading: Icon(Icons.calendar_today),
+                        title: Text("Ora inizio: "+ (attivita.orainizio?.hour.toString().padLeft(2, '0') ?? "")+":"+(attivita.orainizio?.minute.toString().padLeft(2, '0')  ?? "")
+                            + "\nOra fine: " +  (attivita.orafine?.hour.toString().padLeft(2, '0')  ?? "")+":"+(attivita.orafine?.minute.toString().padLeft(2, '0')  ?? "")),
+                    ),
+                  ],
+                )
+            );
+          },
+        );
+      },
+      future: _getActivities(),
+    );
+  }
+
+  _getActivities() async {
+    _items = await _storageService.readAllSecureData();
+    String username = "";
+    for (StorageItem s in _items){
+      if (s.key == 'username'){
+        username = s.value;
+        break;
+      }
+    }
+    Utente utente = await repository.getByUsername(username) as Utente;
+    List activities = [];
+    for (Attivita a in utente.listaAttivita!){
+      if (a.data == selectedDate){
+        activities.add(a);
+      }
+    }
+    return activities;
+  }
 }
 
 

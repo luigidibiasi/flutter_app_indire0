@@ -37,6 +37,7 @@ class _MySplashScreenState extends State<SplashScreen> {
       child: InkWell(
         onTap: () {
           //repository.addUtente(newUser);
+          print(route);
           Navigator.pushReplacementNamed(context, route);
           },
         child: ClipRRect(
@@ -58,5 +59,6 @@ class _MySplashScreenState extends State<SplashScreen> {
         route = '/menu_utente';
       }
     }
+
   }
 }

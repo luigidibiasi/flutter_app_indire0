@@ -19,15 +19,19 @@ class _InsertActivityState extends State<InsertActivity> {
   TimeOfDay start = TimeOfDay.now();
   TimeOfDay end = TimeOfDay.now();
   String? dropDownValue;
+  bool first = true;
 
   @override
   void initState() {
     super.initState();
-    end = _initializeEnd();
+    //end = _initializeEnd();
   }
 
   @override
   Widget build(BuildContext context) {
+    RouteSettings? settings = ModalRoute.of(context)?.settings;
+    selectedDate = settings?.arguments as DateTime;
+    end = _initializeEnd();
     return Scaffold(
       appBar: AppBar(title: Text("Inserisci attività")),
       drawer: NavDrawerAdmin(),
@@ -52,10 +56,12 @@ class _InsertActivityState extends State<InsertActivity> {
                           ElevatedButton(
                             onPressed: () {
                               _selectDate(context);
+                              setState(() {
+                              });
                             },
                             child: Text("Scegli data"),
                           ),
-                          Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}")
+                          Text("${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",  style: Theme.of(context).textTheme.headlineSmall)
                         ],
                       ),
                     ),
@@ -74,7 +80,7 @@ class _InsertActivityState extends State<InsertActivity> {
                               },
                               child: Text("Scegli orario di inizio"),
                             ),
-                            Text("${start.hour}:${start.minute}"),
+                            Text("\t${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')}",  style: Theme.of(context).textTheme.headlineSmall),
                           ]
                       ),
                     ),
@@ -90,7 +96,7 @@ class _InsertActivityState extends State<InsertActivity> {
                               },
                               child: Text("Scegli orario di fine"),
                             ),
-                            Text("${end.hour}:${end.minute}"),
+                            Text("\t${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}",  style: Theme.of(context).textTheme.headlineSmall),
                           ]
                       ),
                     ),
@@ -99,11 +105,30 @@ class _InsertActivityState extends State<InsertActivity> {
                     ),
                     Container(
                       height: 50,
+                      margin: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: ElevatedButton(
                         onPressed: () async {
                           if (await _validate()){
-                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  AlertDialog(
+                                    title: Text(
+                                        'Attività assegnata correttamente!'),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pop(
+                                                context);
+                                            Navigator.pop(
+                                                context);
+                                          },
+                                          child: Text('Chiudi'))
+                                    ],
+                                  ),
+                            );
+                            //Navigator.pop(context);
                           }
                         },
                         child: Text("Assegna attività"),
@@ -127,7 +152,7 @@ class _InsertActivityState extends State<InsertActivity> {
         }
         return Container(
           child: DropdownButton<String>(
-            hint: Text(dropDownValue ?? 'Make a selection'),
+            hint: Text(dropDownValue ?? "Seleziona l'utente"),
             items: snapshot.data.map<DropdownMenuItem<String>>((item) {
               return DropdownMenuItem<String>(
                 value: item.username,
@@ -175,6 +200,22 @@ class _InsertActivityState extends State<InsertActivity> {
     List<Utente> utenti = await repository.getAllUsers() as List<Utente>;
     List<Utente> availableusers = repository.getAvailableUsers(utenti, selectedDate, start, end);
     print(availableusers.length);
+    if (availableusers.length==0 && !first){
+      showDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
+                title: Text(
+                    "Nessun utente disponibile nella fascia oraria selezionata!"),
+                actions: <Widget>[
+                  new ElevatedButton(
+                    onPressed: () => Navigator.pop(context), // Closes the dialog
+                    child: new Text('Chiudi'),
+                  ),
+                ],
+              )
+      );
+    }
     return availableusers;
   }
 
@@ -200,7 +241,7 @@ class _InsertActivityState extends State<InsertActivity> {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2010),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025),
       helpText: "SELEZIONA DATA",
       cancelText: "ANNULLA",
@@ -210,7 +251,9 @@ class _InsertActivityState extends State<InsertActivity> {
     if (selected != null && selected != selectedDate)
       setState(() {
         selectedDate = selected;
+        first = false;
       });
+    first = false;
   }
 
   _selectStartTime(BuildContext context) async {
@@ -223,8 +266,10 @@ class _InsertActivityState extends State<InsertActivity> {
     {
       setState(() {
         start = timeOfDay;
+        first= false;
       });
     }
+
   }
 
   _selectEndTime(BuildContext context) async {
@@ -237,14 +282,15 @@ class _InsertActivityState extends State<InsertActivity> {
     {
       setState(() {
         end = timeOfDay;
+        first = false;
       });
     }
   }
 
   TimeOfDay _initializeEnd(){
     return start.replacing(
-        hour: start.hour,
-        minute: start.minute + 1,
+        hour: start.hour + 1,
+        minute: start.minute,
     );
   }
 

@@ -15,7 +15,7 @@ class ModifyUser extends StatefulWidget {
 
 class _ModifyUserState extends State<ModifyUser> {
   Utente? utente;
-  final _registerFormKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   var _emailTextController = null;
   var _passwordTextController = null;
@@ -78,7 +78,7 @@ class _ModifyUserState extends State<ModifyUser> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Form(
-                          key: _registerFormKey,
+                          key: _formKey,
                           child: Column(
                             children: <Widget>[
                               TextFormField(
@@ -143,13 +143,34 @@ class _ModifyUserState extends State<ModifyUser> {
                                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        String email = _emailTextController.text.trim();
-                                        String password = _passwordTextController.text();
-                                        String telefono = _telefonoTextController.text.trim();
-                                        utente?.email = email;
-                                        utente?.password = password;
-                                        utente?.telefono = telefono;
-                                        repository.updateUtente(utente!);
+                                        if (_formKey.currentState!.validate()) {
+                                          String email = _emailTextController
+                                              .text.trim();
+                                          String password = _passwordTextController
+                                              .text;
+                                          String telefono = _telefonoTextController
+                                              .text.trim();
+                                          utente?.email = email;
+                                          utente?.password = password;
+                                          utente?.telefono = telefono;
+                                          repository.updateUtente(utente!);
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                AlertDialog(
+                                                  title: Text(
+                                                      'Dati modificati correttamente!'),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text('Chiudi'))
+                                                  ],
+                                                ),
+                                          );
+                                        }
                                       },
                                       child: Text(
                                         'Conferma',
@@ -173,4 +194,5 @@ class _ModifyUserState extends State<ModifyUser> {
       ),
     );
   }
+
 }

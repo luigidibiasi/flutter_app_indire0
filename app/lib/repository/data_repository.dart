@@ -138,8 +138,7 @@ class DataRepository {
       List<Attivita>? lista = element.listaAttivita;
       for (var a in lista!){
         if (a.data?.day == date.day){
-          if (!(toDouble(a.orainizio!) > toDouble(start) && toDouble(end) <= toDouble(a.orainizio!)) ||
-              !(toDouble(start) > toDouble(a.orainizio!) && toDouble(start) <= toDouble(a.orafine!))) {
+          if (!((toDouble(start) >= toDouble(a.orafine!)) || (toDouble(end) <= toDouble(a.orainizio!)))){
             available = false;
             break;
           }
