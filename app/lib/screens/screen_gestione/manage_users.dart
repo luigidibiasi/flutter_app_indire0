@@ -114,7 +114,7 @@ class _ManageUsersState extends State<ManageUsers> {
                                                 _deleteUser(utente);
                                                 setState(() {});
                                               },
-                                              child: new Text('Yes'),
+                                              child: new Text('Sì'),
                                             ),
                                           ],
                                         ),

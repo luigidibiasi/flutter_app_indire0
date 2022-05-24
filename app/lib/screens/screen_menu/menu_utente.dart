@@ -16,7 +16,7 @@ class MenuUtente extends StatelessWidget{
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(30),
-                    child: Image.asset('assets/img/logo.png',
+                    child: Image.asset('assets/img/logo.jpeg',
                       fit: BoxFit.contain,
                       width: 200,),
                   ),
