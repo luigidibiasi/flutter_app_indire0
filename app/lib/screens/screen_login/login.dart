@@ -3,8 +3,10 @@ import 'package:flutter_app2/models/storageitem.dart';
 import '../../models/utente.dart';
 import '../../repository/data_repository.dart';
 import 'package:flutter_app2/services/secure_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 DataRepository repository = DataRepository();
+final Uri _url = Uri.parse('https://www.iisvicodevivo.edu.it/ufficio-relazioni-pubblico/');
 //final newUser = Utente('admin', nome:'Maria', cognome: 'Natale', email: 'maria_girl.98@hotmail.it', password:'maria',
   //telefono: '333544', admin: true, listaAttivita: []);
 
@@ -102,9 +104,25 @@ class _LoginState extends State<Login>{
                           const Text('Hai bisogno di aiuto?'),
                           TextButton(
                             child: Text(
-                                'Contattataci',
+                                'Contattaci',
                                 style: Theme.of(context).textTheme.bodyText2),
-                            onPressed: (){
+                            onPressed: () async{
+                              if(await canLaunchUrl(_url)){
+                                await launchUrl(_url);
+                              }
+                            },
+                          )
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          TextButton(
+                            child: Text(
+                                'Credits',
+                                style: Theme.of(context).textTheme.bodyText2),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/webview');
                             },
                           )
                         ],

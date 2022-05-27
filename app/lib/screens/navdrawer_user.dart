@@ -16,10 +16,7 @@ class NavDrawerUser extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 25),
             ),
             decoration: BoxDecoration(
-                color: Colors.lightBlueAccent,
-                /*image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage('assets/images/cover.jpg'))*/
+                color: const Color.fromRGBO(222,165,13, .8),
                 ),
           ),
           ListTile(
@@ -37,8 +34,8 @@ class NavDrawerUser extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Impostazioni'),
-            onTap: () => {},
+            title: Text('Credits'),
+            onTap: () => {Navigator.pushNamed(context, '/webview')},
           ),
         ],
       ),

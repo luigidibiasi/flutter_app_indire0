@@ -110,7 +110,8 @@ class _ManageActivitiesState extends State<ManageActivities> {
                           children: [
                             Row(
                                 children: [Text("Ora inizio: "+ (attivita.orainizio?.hour.toString().padLeft(2, '0') ?? "")+":"+(attivita.orainizio?.minute.toString().padLeft(2, '0') ?? "")
-                              + "\nOra fine: " +  (attivita.orafine?.hour.toString().padLeft(2, '0') ?? "")+":"+(attivita.orafine?.minute.toString().padLeft(2, '0') ?? ""),
+                              + "\nOra fine: " +  (attivita.orafine?.hour.toString().padLeft(2, '0') ?? "")+":"+(attivita.orafine?.minute.toString().padLeft(2, '0') ?? "")
+                                  +"\nDescrizione: "+ (attivita.descrizione),
                               )
                               ],
                             ),

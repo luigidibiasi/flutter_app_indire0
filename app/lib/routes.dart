@@ -10,8 +10,8 @@ import 'package:flutter_app2/screens/screen_menu/menu_admin.dart';
 import 'package:flutter_app2/screens/screen_gestione/manage_users.dart';
 import 'package:flutter_app2/screens/screen_gestione/insert_user.dart';
 import 'package:flutter_app2/screens/screen_gestione/manage_activities.dart';
-import 'package:flutter_app2/screens/screen_gestione/insert_activity.dart';
 import 'package:flutter_app2/screens/screen_gestione/modify_activity.dart';
+import 'package:flutter_app2/screens/web_view.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
     '/home': (context) => MyHomePage(),
@@ -26,4 +26,5 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
     '/modify_activity': (context) => ModifyActivity(),
     '/modify_user': (context) => ModifyUser(),
     '/home_user': (context) => HomeUser(),
+    '/webview': (context) => WebViewApp_Credits(),
 };

@@ -67,6 +67,7 @@ class _ModifyActivityState extends State<ModifyActivity> {
                           children: <Widget>[
                             Text("Orario: ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')}"),
                             Text(" - ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}"),
+                            Text("Descrizione: "+ (attivita.descrizione),)
                           ]
                       ),
                     ),
@@ -154,7 +155,8 @@ class _ModifyActivityState extends State<ModifyActivity> {
     repository.updateUtente(utente_new!);
     final Email email_assegnazione = Email(
       body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
-          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}',
+          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}\n'
+          'Descrizione: ${a.descrizione}',
       subject: 'assegnazione nuova attività',
       recipients: [utente_new.email!],
       isHTML: false,

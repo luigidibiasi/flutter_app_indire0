@@ -6,8 +6,9 @@ class Attivita {
   DateTime? data;
   TimeOfDay? orainizio;
   TimeOfDay? orafine;
+  String descrizione;
 
-  Attivita(this.data, this.orainizio, this.orafine);
+  Attivita(this.data, this.orainizio, this.orafine, this.descrizione);
   factory Attivita.fromJson(Map<String, dynamic> json) =>
       _attivitaFromJson(json);
   // 4
@@ -22,6 +23,7 @@ Attivita _attivitaFromJson(Map<String, dynamic> json) {
       (json['data'] as Timestamp).toDate(),
       firebaseToTimeOfDay(json['orainizio']),
       firebaseToTimeOfDay(json['orafine']),
+      json['descrizione']
   );
 }
 
@@ -30,6 +32,7 @@ Map<String, dynamic> _attivitaToJson(Attivita instance) =>
       'data': instance.data,
       'orainizio': timeOfDayToFirebase(instance.orainizio!),
       'orafine': timeOfDayToFirebase(instance.orafine!),
+      'descrizione': instance.descrizione
     };
 
 

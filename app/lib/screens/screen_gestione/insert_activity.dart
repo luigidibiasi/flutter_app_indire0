@@ -18,6 +18,8 @@ class _InsertActivityState extends State<InsertActivity> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay start = TimeOfDay.now();
   TimeOfDay end = TimeOfDay.now();
+  String descrizione = "";
+  TextEditingController descriptionController = TextEditingController();
   String? dropDownValue;
   bool first = true;
 
@@ -43,7 +45,7 @@ class _InsertActivityState extends State<InsertActivity> {
           ),
           margin: EdgeInsets.all(30),
           child: Container(
-            height: 400,
+            height: 800,
             child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: ListView(
@@ -98,6 +100,19 @@ class _InsertActivityState extends State<InsertActivity> {
                             ),
                             Text("\t${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}",  style: Theme.of(context).textTheme.headlineSmall),
                           ]
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      height: 200,
+                      padding: const EdgeInsets.all(10),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        maxLines: 8, //or null
+                        decoration:  InputDecoration(
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20.0),),
+                          labelText: "Inserisci descrizione dell'attività",
+          ),
                       ),
                     ),
                     Center(
@@ -179,14 +194,15 @@ class _InsertActivityState extends State<InsertActivity> {
 
     Utente? utente = await repository.getByUsername(dropDownValue!) as Utente?;
     print(utente);
-
-    Attivita a = Attivita(selectedDate, start, end);
+    descrizione = descriptionController.text;
+    Attivita a = Attivita(selectedDate, start, end, descrizione);
     utente?.listaAttivita?.add(a);
     repository.updateUtente(utente!);
 
     final Email send_email = Email(
       body: 'Sei stato assegnato per una nuova attività in data ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
-          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}',
+          ' dalle ore ${start.hour.toString().padLeft(2, '0')}:${start.minute.toString().padLeft(2, '0')} alle ${end.hour.toString().padLeft(2, '0')}:${end.minute.toString().padLeft(2, '0')}\n'
+          'Descrizione: ${descrizione}',
       subject: 'assegnazione nuova attività',
       recipients: [utente.email!],
       isHTML: false,

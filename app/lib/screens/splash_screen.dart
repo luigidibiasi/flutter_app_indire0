@@ -41,12 +41,12 @@ class _MySplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacementNamed(context, route);
           },
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          child: Image.asset('assets/img/logo.jpeg',
-              width: 110.0, height: 110.0),
-        ),
-      ),
-    );
+                borderRadius: BorderRadius.circular(20.0),
+                child: Image.asset('assets/img/logo.jpeg',
+                    width: 110.0, height: 110.0),
+              ),
+          ),
+        );
   }
 
   Future<void> _checkStorage() async{
